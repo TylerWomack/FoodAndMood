@@ -11,8 +11,65 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 import java.util.HashMap;
 
+
+@Entity(tableName = "food_table")
+public class Food {
+
+    @ColumnInfo(name = "timesEaten")
+    private int timesEaten;
+
+    @ColumnInfo(name = "totalScore")
+    private double totalScore;
+
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "food")
+    private String name;
+
+    public Food(@NonNull String name) {
+        this.name = name;
+        timesEaten = 0;
+        totalScore = 0;
+    }
+
+    public int getTimesEaten() {
+        return timesEaten;
+    }
+
+    public void setTimesEaten(int timesEaten) {
+        this.timesEaten = timesEaten;
+    }
+
+    public double getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(double totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    public void setName(@NonNull String name) {
+        this.name = name;
+    }
+
+    public double getAverageScore(){
+        return (getTotalScore()/getTimesEaten());
+    }
+}
+
+
+
+
+/*
+
 @Entity(tableName = "food_table")
 public class Food implements Parcelable {
+
 
     private int timesEaten;
     private double totalScore;
@@ -50,6 +107,7 @@ public class Food implements Parcelable {
         this.timesEaten = timesEaten;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
@@ -58,7 +116,7 @@ public class Food implements Parcelable {
         return (getTotalScore()/getTimesEaten());
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
@@ -81,4 +139,6 @@ public class Food implements Parcelable {
         dest.writeDouble(totalScore);
         dest.writeString(name);
     }
-}
+
+    */
+//}

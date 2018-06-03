@@ -23,9 +23,7 @@ public class FoodHistoryActivity extends AppCompatActivity implements MainRecycl
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private ViewModel viewModel;
     private MainRecyclerViewAdapter adapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
 
     @Override
@@ -36,22 +34,19 @@ public class FoodHistoryActivity extends AppCompatActivity implements MainRecycl
 
         recyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
 
         adapter = new MainRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
 
-
-
-        viewModel = ViewModelProviders.of(this).get(ViewModel.class);
+        ViewModel viewModel = ViewModelProviders.of(this).get(ViewModel.class);
         viewModel.getAllFoods().observe(this, new Observer<List<Food>>() {
             @Override
             public void onChanged(@Nullable List<Food> foods) {
                 adapter.setFoodList(foods);
             }
         });
-
     }
 
     @Override

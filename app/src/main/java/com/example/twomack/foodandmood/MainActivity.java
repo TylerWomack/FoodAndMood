@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
 
-    private FoodDao mFoodDao;
-    private List<Food> mAllFoods;
     private ViewModel viewModel;
 
     @Override
@@ -44,22 +42,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         viewModel = ViewModelProviders.of(this).get(ViewModel.class);
-    }
 
-    public void getFoods(View v){
-        final LiveData<List<Food>> foodList = viewModel.getAllFoods();
-        final MediatorLiveData mediatorLiveData = new MediatorLiveData<>();
-
-        Observer<List<Food>> observer = new Observer<List<Food>>() {
+        //I'm creating this observer because LiveData will not send out a value unless it has at least one observer. Observing the Livedata from
+        //room activates it, allowing me to retrieve the value in my viewmodel later.
+        viewModel.getAllFoods().observe(this, new Observer<List<Food>>() {
             @Override
             public void onChanged(@Nullable List<Food> foods) {
-                //launchFoodHistoryActivity();
-                mediatorLiveData.removeSource(foodList);
-            }
-        };
 
-        mediatorLiveData.addSource(foodList, observer);
-        mediatorLiveData.observe(this, observer);
+            }
+        });
     }
 
     public void launchFoodHistoryActivity(View v){
@@ -67,8 +58,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //todo: I don't like this. I don't think I should need to get my entire list of foods here, in the activity, to update a few. Can't seem to
-    //get it to work otherwise though.
+    public void submitFoods(View v){
+        viewModel.updateFoods(foodEntryText.getText().toString(), (double) ratingBar.getRating());
+
+        foodEntryText.setText("");
+    }
+
+    //an older implementation - I had to do this before I added the observer in onCreate().
+    /*
     public void submitFoods(View v) {
 
         final LiveData<List<Food>> foodList = viewModel.getAllFoods();
@@ -87,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
         mediatorLiveData.addSource(foodList, observer);
         mediatorLiveData.observe(this, observer);
     }
+    */
 
     public void clearDataBase(View v){
         viewModel.clearDataBase();
-
     }
 }
